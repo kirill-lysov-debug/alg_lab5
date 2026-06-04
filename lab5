@@ -7,50 +7,36 @@ class Node:
     def is_leaf(self):
         return self.left is None and self.right is None
 
-
-# ==========================================
-# ОБЯЗАТЕЛЬНАЯ ЧАСТЬ
-# ==========================================
-
 def build_expression_tree(tokens):
-    """Построение дерева выражений по списку токенов постфиксной записи."""
     stack = []
     operators = {'+', '-', '*', '/'}
 
     for token in tokens:
-        # Если токен — оператор
         if token in operators:
-            # Первый извлеченный узел становится ПРАВЫМ потомком,
-            # а второй — ЛЕВЫМ (важно для деления и вычитания).
             right_node = stack.pop()
             left_node = stack.pop()
-            
-            # Создаем внутренний узел-оператор и связываем с потомками
+
             parent_node = Node(value=token, left=left_node, right=right_node)
             stack.append(parent_node)
+
         else:
-            # Если токен — число (операнд), создаем лист дерева
+
             node = Node(value=int(token))
             stack.append(node)
             
-    # В конце в стеке остается один элемент — корень всего дерева
     return stack[0] if stack else None
 
 
 def evaluate(root):
-    """Рекурсивное вычисление значения выражения, расположенного в дереве."""
     if root is None:
         return 0
 
-    # Если мы пришли в лист, возвращаем его числовое значение
     if root.is_leaf():
         return root.value
 
-    # Рекурсивно вычисляем левое и правое поддеревья
     left_val = evaluate(root.left)
     right_val = evaluate(root.right)
 
-    # Применяем оператор корня к результатам поддеревьев
     if root.value == '+':
         return left_val + right_val
     elif root.value == '-':
@@ -60,45 +46,17 @@ def evaluate(root):
     elif root.value == '/':
         return left_val // right_val  # Целочисленное деление
 
-
-# ==========================================
-# ВАРИАТИВНАЯ ЧАСТЬ (Пункт 3: Префиксная форма)
-# ==========================================
-
 def to_prefix(root):
-    """Обход дерева в порядке корень->левый->правый для получения префиксной строки."""
     if root is None:
         return ""
     
-    # Если это лист, возвращаем его значение в виде строки
     if root.is_leaf():
         return str(root.value)
     
-    # Для оператора: сначала сам оператор, затем левое поддерево, затем правое
     left_prefix = to_prefix(root.left)
     right_prefix = to_prefix(root.right)
     
     return f"{root.value} {left_prefix} {right_prefix}"
-
-
-# ==========================================
-# ДОПОЛНИТЕЛЬНО: Визуализация дерева в консоли
-# ==========================================
-
-def print_tree(root, level=0, prefix="Корень: "):
-    """Красивый вывод структуры дерева в консоль (повернуто на 90 градусов)."""
-    if root is None:
-        return
-
-    # Сначала печатаем правое поддерево (оно будет отображаться сверху)
-    print_tree(root.right, level + 1, "/-- ")
-
-    # Печатаем текущий узел с отступами
-    indent = "    " * level
-    print(f"{indent}{prefix}{root.value}")
-
-    # Затем печатаем левое поддерево (оно будет отображаться снизу)
-    print_tree(root.left, level + 1, "\\-- ")
 
 
 # ==========================================
