@@ -44,7 +44,7 @@ def evaluate(root):
     elif root.value == '*':
         return left_val * right_val
     elif root.value == '/':
-        return left_val // right_val  # Целочисленное деление
+        return left_val // right_val
 
 def to_prefix(root):
     if root is None:
@@ -71,9 +71,7 @@ if __name__ == "__main__":
     
     root1 = build_expression_tree(tokens1)
     print(f"Результат вычисления: {evaluate(root1)}")
-    print(f"Префиксная форма (Пункт 3): {to_prefix(root1)}")
-    print("\nСтруктура дерева в консоли:")
-    print_tree(root1)
+    print(f"Префиксная форма: {to_prefix(root1)}")
     
     print("\n" + "="*40 + "\n")
 
@@ -84,6 +82,4 @@ if __name__ == "__main__":
     
     root2 = build_expression_tree(tokens2)
     print(f"Результат вычисления: {evaluate(root2)}")
-    print(f"Префиксная форма (Пункт 3): {to_prefix(root2)}")
-    print("\nСтруктура дерева в консоли:")
-    print_tree(root2)
+    print(f"Префиксная форма: {to_prefix(root2)}")
