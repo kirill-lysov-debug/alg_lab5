@@ -4,82 +4,25 @@ class Node:
         self.left = left
         self.right = right
 
-    def is_leaf(self):
-        return self.left is None and self.right is None
-
 def build_expression_tree(tokens):
     stack = []
-    operators = {'+', '-', '*', '/'}
-
     for token in tokens:
-        if token in operators:
-            right_node = stack.pop()
-            left_node = stack.pop()
-
-            parent_node = Node(value=token, left=left_node, right=right_node)
-            stack.append(parent_node)
-
+        if token in ('+', '-', '*', '/'):
+            right = stack.pop()
+            left = stack.pop()
+            stack.append(Node(token, left, right))
         else:
-
-            node = Node(value=int(token))
-            stack.append(node)
-            
-    return stack[0] if stack else None
-
+            stack.append(Node(int(token)))
+    return stack[0]
 
 def evaluate(root):
-    if root is None:
-        return 0
-
-    if root.is_leaf():
+    if not root.left and not root.right:
         return root.value
 
     left_val = evaluate(root.left)
     right_val = evaluate(root.right)
-
-    if root.value == '+':
-        return left_val + right_val
-    elif root.value == '-':
-        return left_val - right_val
-    elif root.value == '*':
-        return left_val * right_val
-    elif root.value == '/':
-        return left_val // right_val
-
-def to_prefix(root):
-    if root is None:
-        return ""
     
-    if root.is_leaf():
-        return str(root.value)
-    
-    left_prefix = to_prefix(root.left)
-    right_prefix = to_prefix(root.right)
-    
-    return f"{root.value} {left_prefix} {right_prefix}"
-
-
-# ==========================================
-# ДЕМОНСТРАЦИЯ РАБОТЫ
-# ==========================================
-
-if __name__ == "__main__":
-    # Тест 1: Выражение "2 5 * 3 +" -> (2 * 5) + 3
-    tokens1 = ["2", "5", "*", "3", "+"]
-    print("=== ТЕСТ 1 ===")
-    print(f"Входная постфиксная запись: {' '.join(tokens1)}")
-    
-    root1 = build_expression_tree(tokens1)
-    print(f"Результат вычисления: {evaluate(root1)}")
-    print(f"Префиксная форма: {to_prefix(root1)}")
-    
-    print("\n" + "="*40 + "\n")
-
-    # Тест 2: Выражение "2 3 + 4 5 * +" -> (2 + 3) + (4 * 5)
-    tokens2 = ["2", "3", "+", "4", "5", "*", "+"]
-    print("=== ТЕСТ 2 ===")
-    print(f"Входная постфиксная запись: {' '.join(tokens2)}")
-    
-    root2 = build_expression_tree(tokens2)
-    print(f"Результат вычисления: {evaluate(root2)}")
-    print(f"Префиксная форма: {to_prefix(root2)}")
+    if root.value == '+': return left_val + right_val
+    if root.value == '-': return left_val - right_val
+    if root.value == '*': return left_val * right_val
+    if root.value == '/': return left_val / right_val
